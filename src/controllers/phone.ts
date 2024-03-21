@@ -13,6 +13,19 @@ const phoneController = {
         }
     },
 
+    getPhone: async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { id } = req.params as { id: string }
+            const numericId = parseInt(id)
+            if(isNaN(numericId))
+                return res.status(400).send("ID deve ser numérico")
+            const phone = await phoneServices.getPhone(numericId)
+            return res.status(200).json(phone)
+        } catch (error) {
+            next(error)
+        }
+    },
+
     createPhone: async (req: Request, res: Response, next: NextFunction) => {
         try {
             const phone = req.body as Prisma.PhoneCreateInput
