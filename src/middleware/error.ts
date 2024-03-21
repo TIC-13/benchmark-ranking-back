@@ -11,13 +11,14 @@ export default function errorHandler(err: Error, req: Request, res: Response, ne
         if(err.code === "P2025") {
             return res.status(400).send("Não encontrado")
         }
+        if(err.code === "P2003") {
+            return res.status(400).send("Entidade relacionada não existe")
+        }
     }
 
     if(err instanceof Prisma.PrismaClientValidationError){
-        return res.status(400).send("Os dados enviados estão incompletos")
+        return res.status(400).send("Os dados enviados estão incompletos ou inválidos")
     }
-
-    //if(err instanceof PrismaKnownClientError)
 
     return res.status(500).send("Erro interno do servidor")
 }
