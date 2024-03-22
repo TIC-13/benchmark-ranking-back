@@ -15,7 +15,7 @@ datasource db {
 
 model Phone {
   id           Int         @id @default(autoincrement())
-  brand_name   String
+  brand_name   String      @unique
   manufacturer String
   phone_model  String
   android_id   String      @unique
@@ -27,6 +27,8 @@ model Inference {
   id           Int     @id @default(autoincrement())
   phone        Phone   @relation(fields: [phone_id], references: [id])
   phone_id     Int
+  init_speed   Int     
+  inf_speed    Int     
   ml_model     String
   category     String
   quantization String
