@@ -47,25 +47,15 @@ const phoneController = {
             const { quantizations, models} = req.body as RankingRequestBody
             const phones = await phoneServices.getAllPhones()
             const ranking = []
-            for (let phone of phones) {
-                const modelResults: RankingEntry[] = []
-                for (let model of models) {
-                    const results = await inferenceServices.selectInferences({ phone_id: phone.id, ml_model: model })
-                    quantizations.map((quantization) => {
-                        const resultsOfQuant = results.filter(result => result.quantization === quantization)
-                        return modelResults.push({
-                            model,
-                            quantization,
-                            speed: resultsOfQuant.length !== 0?
-                                media(resultsOfQuant
-                                    .map(result => result.inf_speed)): null           
-                        })
-                    })
+            for(let phone of phones) {
+                const results = []
+                for (let model of models){
+                    for (let quantization of quantizations){
+                        const speed = await inferenceServices.getMediumSpeed({phone_id: phone.id, ml_model: model, quantization: quantization})
+                        results.push({model, quantization, speed})
+                    }
                 }
-                ranking.push({
-                    phone,
-                    results: modelResults
-                })
+                ranking.push({ phone, results })
             }
             return res.status(200).json(ranking)
         } catch (error) {
@@ -73,8 +63,5 @@ const phoneController = {
         }
     }
 }
-
-const media = (arr: number[]) =>
-    arr.reduce((x, y) => x + y) / arr.length
 
 export default phoneController
