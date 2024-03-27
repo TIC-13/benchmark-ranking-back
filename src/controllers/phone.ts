@@ -3,8 +3,6 @@ import phoneServices from "../services/phone";
 import { Prisma } from "@prisma/client";
 import inferenceServices from "../services/inference";
 
-type RankingRequestBody = { models: string[], quantizations: string[], modes: ("CPU" | "GPU" | "NNAPI")[] }
-
 const phoneController = {
 
     getAllPhones: async (req: Request, res: Response, next: NextFunction) => {
@@ -52,12 +50,12 @@ const phoneController = {
             for (let phone of phones) {
                 const results = []
                 for (let model of modelsArray) {
-                    for (let mode of modesArray) {
-                        const uses =
-                            mode === "CPU" ? { uses_gpu: false, uses_nnapi: false } :
-                                mode === "GPU" ? { uses_gpu: true, uses_nnapi: false } :
-                                    { uses_gpu: false, uses_nnapi: true }
-                        for (let quantization of quantizationsArray) {
+                    for (let quantization of quantizationsArray) {
+                        for (let mode of modesArray) {
+                            const uses =
+                                mode === "CPU" ? { uses_gpu: false, uses_nnapi: false } :
+                                    mode === "GPU" ? { uses_gpu: true, uses_nnapi: false } :
+                                        { uses_gpu: false, uses_nnapi: true }
                             const speed = await inferenceServices.getMediumSpeed({ phone_id: phone.id, ml_model: model, quantization: quantization, ...uses })
                             results.push({ model, quantization, speed, mode })
                         }
