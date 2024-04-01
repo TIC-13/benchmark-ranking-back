@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import phoneServices from "../services/phone";
-import { Prisma } from "@prisma/client";
+import { Phone, Prisma } from "@prisma/client";
 import inferenceServices from "../services/inference";
 
 const phoneController = {
@@ -65,6 +65,39 @@ const phoneController = {
                 ranking.push({ phone, results })
             }
             return res.status(200).json(ranking)
+        } catch (error) {
+            next(error)
+        }
+    },
+
+    simpleRanking: async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const modes = [
+                {
+                    name: "CPU",
+                    uses: { uses_gpu: false, uses_nnapi: false}
+                },
+                {
+                    name: "GPU",
+                    uses: { uses_gpu: true, uses_nnapi: false}
+                },
+                {
+                    name: "NNAPI",
+                    uses: { uses_gpu: false, uses_nnapi: true}
+                },
+            ]
+
+            const phones = await phoneServices.getAllPhones()
+            const results = []
+            for(let phone of phones){
+                const phoneResult: any = { phone: phone }
+                for(let mode of modes){
+                    const mediumSpeed = await inferenceServices.getMediumSpeed({phone_id: phone.id, ...mode.uses})
+                    phoneResult[mode.name] = mediumSpeed
+                }
+                results.push(phoneResult)
+            }
+            return res.status(200).send(results)
         } catch (error) {
             next(error)
         }
