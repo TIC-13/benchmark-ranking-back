@@ -39,13 +39,14 @@ const phoneController = {
 
     ranking: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { models, quantizations, modes } = req.query
+            const { models, quantizations, modes, manufacturers } = req.query
 
             const modelsArray: string[] = models ? (models as string).split(',') : [];
             const quantizationsArray: string[] = quantizations ? (quantizations as string).split(',') : [];
             const modesArray: string[] = modes ? (modes as string).split(',') : [];
+            const manufacturersArray: string[] = manufacturers ? (manufacturers as string).split(',') : ["Samsung", "Motorola"];
 
-            const phones = await phoneServices.getAllPhones()
+            const phones = (await phoneServices.getAllPhones()).filter(phone => manufacturersArray.includes(phone.manufacturer))
             const ranking = []
             for (let phone of phones) {
                 const results = []
