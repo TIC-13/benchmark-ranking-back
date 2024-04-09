@@ -29,13 +29,20 @@ const inferenceController = {
 
     createInference: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const inference = req.body as Prisma.InferenceCreateInput
-            const createdInference = await inferenceServices.createInference(inference)
+            const body = req.body as CreatedInferenceWithPhone
+            const createdInference = await inferenceServices.createInference({...body.inference, phone: {
+                connectOrCreate: {
+                    where: { phone_model: body.phone.phone_model },
+                    create: body.phone
+                }
+            }})
             return res.status(200).json(createdInference)
         } catch (error) {
             next(error)
         }
     }
 }
+
+type CreatedInferenceWithPhone = {phone: Prisma.PhoneCreateWithoutInferenceInput, inference: Prisma.InferenceCreateWithoutPhoneInput}
 
 export default inferenceController

@@ -15,10 +15,9 @@ datasource db {
 
 model Phone {
   id           Int         @id @default(autoincrement())
-  brand_name   String      @unique
+  brand_name   String   
   manufacturer String
-  phone_model  String
-  android_id   String      @unique
+  phone_model  String      @unique
   total_ram    Int
   Inference    Inference[]
 }
@@ -42,4 +41,5 @@ model Inference {
   cpu_usage    Float
   gpu          String?
   cpu          String?
+  android_id   String 
 }

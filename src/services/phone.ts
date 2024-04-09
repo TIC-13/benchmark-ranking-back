@@ -10,6 +10,9 @@ const phoneServices = {
     createPhone: (data: Prisma.PhoneCreateInput) =>
         prisma.phone.create({ data }),
 
+    searchPhone: (data: Partial<Prisma.PhoneWhereInput>) => 
+        prisma.phone.findMany({ where: data })
+
 }
 
 export default phoneServices
