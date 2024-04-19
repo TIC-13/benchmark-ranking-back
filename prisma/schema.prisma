@@ -38,10 +38,11 @@ model Inference {
   uses_nnapi         Boolean
   uses_gpu           Boolean
   num_threads        Int
-  ram_usage          Float
+  ram_usage          Float?
   gpu_usage          Float?
-  cpu_usage          Float
+  cpu_usage          Float?
   gpu                String?
   cpu                String?
   android_id         String
+  errorMessage       String?
 }
