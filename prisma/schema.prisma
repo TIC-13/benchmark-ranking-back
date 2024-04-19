@@ -15,7 +15,7 @@ datasource db {
 
 model Phone {
   id           Int         @id @default(autoincrement())
-  brand_name   String   
+  brand_name   String
   manufacturer String
   phone_model  String      @unique
   total_ram    Int
@@ -23,23 +23,25 @@ model Phone {
 }
 
 model Inference {
-  id           Int     @id @default(autoincrement())
-  phone        Phone   @relation(fields: [phone_id], references: [id])
-  phone_id     Int
-  init_speed   Int     
-  inf_speed    Int     
-  ml_model     String
-  category     String
-  quantization String
-  dataset      String
-  num_images   Int
-  uses_nnapi   Boolean
-  uses_gpu     Boolean
-  num_threads  Int
-  ram_usage    Float
-  gpu_usage    Float
-  cpu_usage    Float
-  gpu          String?
-  cpu          String?
-  android_id   String 
+  id                 Int     @id @default(autoincrement())
+  phone              Phone   @relation(fields: [phone_id], references: [id])
+  phone_id           Int
+  init_speed         Int?
+  first_inf_speed    Int?
+  standard_deviation Int?
+  inf_speed          Int?
+  ml_model           String
+  category           String
+  quantization       String
+  dataset            String
+  num_images         Int
+  uses_nnapi         Boolean
+  uses_gpu           Boolean
+  num_threads        Int
+  ram_usage          Float
+  gpu_usage          Float?
+  cpu_usage          Float
+  gpu                String?
+  cpu                String?
+  android_id         String
 }
