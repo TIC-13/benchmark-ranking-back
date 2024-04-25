@@ -72,6 +72,11 @@ const phoneController = {
 
     simpleRanking: async (req: Request, res: Response, next: NextFunction) => {
         try {
+
+            const { models } = req.query
+
+            const modelsArray: string[] = models ? (models as string).split(',') : [];
+
             const modes = [
                 {
                     name: "CPU",
@@ -92,7 +97,11 @@ const phoneController = {
             for(let phone of phones){
                 const phoneResult: any = { phone: phone }
                 for(let mode of modes){
-                    const mediumSpeed = await inferenceServices.getMediumSpeed({phone_id: phone.id, ...mode.uses})
+                    const mediumSpeed = await inferenceServices.getMediumSpeed({
+                        phone_id: phone.id, 
+                        ...mode.uses, 
+                        ml_model:{in: modelsArray}
+                    })
                     phoneResult[mode.name] = mediumSpeed
                 }
                 results.push(phoneResult)
