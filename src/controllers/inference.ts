@@ -22,6 +22,15 @@ const inferenceController = {
         }
     },
 
+    getAllQuantizations: async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const quant = await inferenceServices.getAllQuantizations()
+            return res.status(200).json(quant)
+        } catch (error) {
+            next(error)
+        }
+    },
+
     getInference: async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { id } = req.params as { id: string }

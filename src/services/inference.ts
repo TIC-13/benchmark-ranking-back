@@ -16,6 +16,16 @@ const inferenceServices = {
         return uniqueModels.map(model => model.ml_model);
     },
 
+    getAllQuantizations: async () => {
+        const uniqueModels = await prisma.inference.findMany({
+            select: {
+                quantization: true
+            },
+            distinct: ['quantization']
+        });
+        return uniqueModels.map(model => model.quantization);
+    },
+
     selectInferences: (selectionArgs: Prisma.InferenceWhereInput | undefined) => 
         prisma.inference.findMany({where: selectionArgs}),
 
