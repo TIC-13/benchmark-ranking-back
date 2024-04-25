@@ -73,9 +73,10 @@ const phoneController = {
     simpleRanking: async (req: Request, res: Response, next: NextFunction) => {
         try {
 
-            const { models } = req.query
+            const { models, quantizations } = req.query
 
             const modelsArray: string[] = models ? (models as string).split(',') : [];
+            const quantizationsArray: string[] = quantizations ? (quantizations as string).split(',') : [];
 
             const modes = [
                 {
@@ -100,7 +101,8 @@ const phoneController = {
                     const mediumSpeed = await inferenceServices.getMediumSpeed({
                         phone_id: phone.id, 
                         ...mode.uses, 
-                        ml_model:{in: modelsArray}
+                        ml_model: { in: modelsArray },
+                        quantization: { in: quantizationsArray }
                     })
                     phoneResult[mode.name] = mediumSpeed
                 }
