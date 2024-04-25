@@ -6,6 +6,16 @@ const inferenceServices = {
     getAllInferences: () => 
         prisma.inference.findMany(),
 
+    getAllModels: async () => {
+        const uniqueModels = await prisma.inference.findMany({
+            select: {
+                ml_model: true
+            },
+            distinct: ['ml_model']
+        });
+        return uniqueModels.map(model => model.ml_model);
+    },
+
     selectInferences: (selectionArgs: Prisma.InferenceWhereInput | undefined) => 
         prisma.inference.findMany({where: selectionArgs}),
 

@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { Prisma } from "@prisma/client";
 import inferenceServices from "../services/inference";
-import phoneServices from "../services/phone";
 
 const inferenceController = {
 
@@ -9,6 +8,15 @@ const inferenceController = {
         try {
             const phones = await inferenceServices.getAllInferences()
             return res.status(200).json(phones)
+        } catch (error) {
+            next(error)
+        }
+    },
+
+    getAllModels: async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const models = await inferenceServices.getAllModels()
+            return res.status(200).json(models)
         } catch (error) {
             next(error)
         }
