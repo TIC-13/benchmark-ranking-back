@@ -9,11 +9,12 @@ const inferenceServices = {
     getAllModels: async () => {
         const uniqueModels = await prisma.inference.findMany({
             select: {
-                ml_model: true
+                ml_model: true,
+                category: true
             },
             distinct: ['ml_model']
         });
-        return uniqueModels.map(model => model.ml_model);
+        return uniqueModels;
     },
 
     getAllQuantizations: async () => {
