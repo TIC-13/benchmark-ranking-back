@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { Prisma } from "@prisma/client";
 import inferenceServices from "../services/inference";
+import { prisma } from "../utils/prismaClient";
 
 const inferenceController = {
 
@@ -16,7 +17,19 @@ const inferenceController = {
     getAllModels: async (req: Request, res: Response, next: NextFunction) => {
         try {
             const models = await inferenceServices.getAllModels()
-            return res.status(200).json(models)
+            const result = []
+
+            for(let model of models){
+                const quantizations = (await prisma.inference.findMany({
+                    select: { quantization: true },
+                    where: model,
+                    distinct: ['quantization']
+                })).map(x => x.quantization)
+
+                result.push({...model, quantizations})
+            }
+
+            return res.status(200).json(result)
         } catch (error) {
             next(error)
         }
