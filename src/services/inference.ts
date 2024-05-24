@@ -41,7 +41,12 @@ const inferenceServices = {
             totalImages += inf.num_images
         }
         if(totalImages === 0) return null
-        return parseInt((totalSpeed / totalImages).toString())
+        return {
+            speed: parseInt((totalSpeed / totalImages).toString()),
+            samples: inferences
+                .map(x => x.num_images)
+                .reduce((acc, curr) => acc+curr)
+        }
     },
 
     getInference: (id: number) => 
