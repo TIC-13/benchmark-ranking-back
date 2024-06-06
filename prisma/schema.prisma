@@ -43,6 +43,8 @@ model Inference {
   cpu_usage          Float?
   gpu                String?
   cpu                String?
+  power              Float?
+  energy             Float?
   android_id         String
   errorMessage       String?
 }
