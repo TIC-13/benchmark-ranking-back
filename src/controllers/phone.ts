@@ -57,7 +57,7 @@ const phoneController = {
                                 mode === "CPU" ? { uses_gpu: false, uses_nnapi: false } :
                                     mode === "GPU" ? { uses_gpu: true, uses_nnapi: false } :
                                         { uses_gpu: false, uses_nnapi: true }
-                            const speed = await inferenceServices.getMediumSpeed({ phone_id: phone.id, ml_model: model, quantization: quantization, ...uses })
+                            const speed = await inferenceServices.getRankingData({ phone_id: phone.id, ml_model: model, quantization: quantization, ...uses })
                             results.push({ model, quantization, speed, mode })
                         }
                     }
@@ -98,7 +98,7 @@ const phoneController = {
             for(let phone of phones){
                 const phoneResult: any = { phone: phone }
                 for(let mode of modes){
-                    const mediumSpeed = await inferenceServices.getMediumSpeed({
+                    const mediumSpeed = await inferenceServices.getRankingData({
                         phone_id: phone.id, 
                         ...mode.uses, 
                         ml_model: { in: modelsArray },

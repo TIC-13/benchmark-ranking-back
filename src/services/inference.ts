@@ -3,7 +3,7 @@ import { Prisma } from "@prisma/client"
 
 const inferenceServices = {
 
-    getAllInferences: () => 
+    getAllInferences: () =>
         prisma.inference.findMany(),
 
     getAllModels: async () => {
@@ -27,30 +27,48 @@ const inferenceServices = {
         return uniqueModels.map(model => model.quantization);
     },
 
-    selectInferences: (selectionArgs: Prisma.InferenceWhereInput | undefined) => 
-        prisma.inference.findMany({where: selectionArgs}),
+    selectInferences: (selectionArgs: Prisma.InferenceWhereInput | undefined) =>
+        prisma.inference.findMany({ where: selectionArgs }),
 
-    getMediumSpeed: async (selectionArgs:  Prisma.InferenceWhereInput | undefined) => {
-        const inferences = await prisma.inference.findMany({where: selectionArgs});
-        const inferencesNotNull = inferences.filter(x => x.inf_speed !== null)
-        if(inferences.length === 0) return null
-        let totalImages = 0
+    getRankingData: async (selectionArgs: Prisma.InferenceWhereInput | undefined) => {
+        const inferences = await prisma.inference.findMany({ where: selectionArgs });
+        if (inferences.length === 0) return null
+
         let totalSpeed = 0
-        for(let inf of inferencesNotNull) {
-            totalSpeed += inf.inf_speed! * inf.num_images
-            totalImages += inf.num_images
+        let speedSamples = 0
+
+        let totalPower = 0
+        let totalEnergy = 0
+        let powerEnergySamples = 0
+
+
+        for (let inf of inferences) {
+
+            if (inf.inf_speed !== null) {
+                totalSpeed += inf.inf_speed * inf.num_images
+                speedSamples += inf.num_images
+            }
+
+            if(inf.power !== null && inf.energy !== null) {
+                totalPower += inf.power * inf.num_images
+                totalEnergy += inf.energy * inf.num_images
+                powerEnergySamples += inf.num_images
+            }
+
         }
-        if(totalImages === 0) return null
+ 
         return {
-            speed: parseInt((totalSpeed / totalImages).toString()),
+            speed: parseInt((totalSpeed / speedSamples).toString()),
+            power: totalPower/powerEnergySamples,
+            energy: totalEnergy/powerEnergySamples,
             samples: inferences
                 .map(x => x.num_images)
-                .reduce((acc, curr) => acc+curr)
+                .reduce((acc, curr) => acc + curr)
         }
     },
 
-    getInference: (id: number) => 
-        prisma.inference.findFirstOrThrow({ where: {id} }),
+    getInference: (id: number) =>
+        prisma.inference.findFirstOrThrow({ where: { id } }),
 
     createInference: (data: Prisma.InferenceCreateInput) =>
         prisma.inference.create({ data }),
