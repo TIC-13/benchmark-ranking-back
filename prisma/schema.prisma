@@ -20,6 +20,7 @@ model Phone {
   phone_model  String      @unique
   total_ram    Int
   Inference    Inference[]
+  LLMInference LLMInference[]
 }
 
 model Inference {
@@ -47,4 +48,42 @@ model Inference {
   energy             Float?
   android_id         String
   errorMessage       String?
+}
+
+model Measurement {
+  id                 Int     @id @default(autoincrement())
+  average            Float
+  median             Float
+  peak               Float
+  std                Float
+  ramLLMInferences LLMInference[] @relation("RamMeasurement")
+  gpuLLMInferences LLMInference[] @relation("GpuMeasurement")
+  cpuLLMInferences LLMInference[] @relation("CpuMeasurement")
+  prefillLLMInferences LLMInference[] @relation("PrefillMeasurement")
+  decodelLLMInferences LLMInference[] @relation("DecodeMeasurement")
+}
+
+
+model LLMInference {
+  id                 Int     @id @default(autoincrement())
+  phone              Phone   @relation(fields: [phone_id], references: [id])
+  phone_id           Int
+
+  ram                Measurement @relation("RamMeasurement", fields: [ram_id], references: [id], map: "Ram_fkey")
+  ram_id             Int
+
+  gpu                Measurement @relation("GpuMeasurement", fields: [gpu_id], references: [id], map: "Gpu_fkey")
+  gpu_id             Int
+
+  cpu                Measurement @relation("CpuMeasurement", fields: [cpu_id], references: [id], map: "Cpu_fkey")
+  cpu_id             Int
+
+  prefill            Measurement @relation("PrefillMeasurement", fields: [prefill_id], references: [id], map: "Prefil_fkey")
+  prefill_id         Int
+
+  decode             Measurement @relation("DecodeMeasurement", fields: [decode_id], references: [id], map: "Decode_fkey")
+  decode_id          Int
+
+  powerAverage       Float?
+  energyAverage      Float?
 }
