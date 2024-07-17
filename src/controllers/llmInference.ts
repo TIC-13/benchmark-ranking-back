@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { prisma } from "../utils/prismaClient";
 import { llmInferenceSchema } from "../schemas/llmInference";
+import inferenceServices from "../services/inference";
 
 const llmInferenceController = {
 
@@ -46,6 +47,27 @@ const llmInferenceController = {
                 }},
             })
             return res.status(200).json(createdInference)
+        } catch (error) {
+            next(error)
+        }
+    },
+
+    getRanking: async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            
+            const phones = await prisma.phone.findMany({where: { LLMInference: { some: {} }}})
+            const results = []
+
+            for(let phone of phones){
+                results.push({ 
+                    phone: phone, 
+                    result: await inferenceServices.getLLMRankingData({
+                        phone_id: phone.id
+                    }) 
+                })
+            }
+
+            return res.status(200).send(results)
         } catch (error) {
             next(error)
         }

@@ -1,3 +1,4 @@
+import { number } from "zod";
 import { prisma } from "../utils/prismaClient"
 import { Prisma } from "@prisma/client"
 
@@ -49,21 +50,49 @@ const inferenceServices = {
                 speedSamples += inf.num_images
             }
 
-            if(inf.power !== null && inf.energy !== null) {
+            if (inf.power !== null && inf.energy !== null) {
                 totalPower += inf.power * inf.num_images
                 totalEnergy += inf.energy * inf.num_images
                 powerEnergySamples += inf.num_images
             }
 
         }
- 
+
         return {
             speed: parseInt((totalSpeed / speedSamples).toString()),
-            power: totalPower/powerEnergySamples,
-            energy: totalEnergy/powerEnergySamples,
+            power: totalPower / powerEnergySamples,
+            energy: totalEnergy / powerEnergySamples,
             samples: inferences
                 .map(x => x.num_images)
                 .reduce((acc, curr) => acc + curr)
+        }
+    },
+
+    getLLMRankingData: async (selectionArgs: Prisma.LLMInferenceWhereInput | undefined) => {
+        const inferences = await prisma.lLMInference.findMany({
+            where: selectionArgs, include: {
+                prefill: true,
+                decode: true,
+            }
+        });
+
+        const prefill = inferences.map(x => x.prefill.average)
+        const decode = inferences.map(x => x.decode.average)
+        const power = inferences.map(x => x.powerAverage).filter(x => x !== null)
+        const energy = inferences.map(x => x.energyAverage).filter(x => x !== null)
+
+        const sum = (numbers: number[]) => numbers.reduce((prev, curr) => prev + curr, 0)
+        const avg = (numbers: number[]) => numbers.length == 0? null: sum(numbers) / numbers.length
+
+
+        if (inferences.length === 0) return null
+
+        return {
+            prefill: avg(prefill),
+            decode: avg(decode),
+            power: avg(power as number[]),
+            energy: avg(energy as number[]),
+            samples: inferences.length
         }
     },
 
