@@ -69,6 +69,8 @@ model LLMInference {
   phone              Phone   @relation(fields: [phone_id], references: [id])
   phone_id           Int
 
+  load_time          Int?
+
   ram                Measurement @relation("RamMeasurement", fields: [ram_id], references: [id], map: "Ram_fkey")
   ram_id             Int
 
