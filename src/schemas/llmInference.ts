@@ -8,7 +8,12 @@ const measurementSchema = z.object({
     std: z.number()
 })
 
+const modelSchema = z.object({
+    name: z.string()
+})
+
 const llmInferenceSchema = z.object({
+    llm_model: modelSchema,
     phone: phoneSchema,
     cpu: measurementSchema,
     gpu: measurementSchema,

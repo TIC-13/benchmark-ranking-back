@@ -84,7 +84,6 @@ const inferenceServices = {
         const sum = (numbers: number[]) => numbers.reduce((prev, curr) => prev + curr, 0)
         const avg = (numbers: number[]) => numbers.length == 0? null: sum(numbers) / numbers.length
 
-
         if (inferences.length === 0) return null
 
         return {

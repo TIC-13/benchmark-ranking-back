@@ -63,11 +63,20 @@ model Measurement {
   decodelLLMInferences LLMInference[] @relation("DecodeMeasurement")
 }
 
+model LLMModel {
+  id        Int    @id @default(autoincrement())
+  name      String @unique
+  inferences LLMInference[]
+}
+
 
 model LLMInference {
   id                 Int     @id @default(autoincrement())
   phone              Phone   @relation(fields: [phone_id], references: [id])
   phone_id           Int
+
+  llm_model          LLMModel @relation(fields: [llm_model_id], references: [id])
+  llm_model_id       Int
 
   load_time          Int?
 

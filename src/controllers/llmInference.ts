@@ -20,6 +20,15 @@ const llmInferenceController = {
         }
     },
 
+    getLLMModels: async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const models = await prisma.lLMModel.findMany()
+            return res.status(200).json(models)
+        } catch (error) {
+            next(error)
+        }
+    },
+
     createLLMInference: async (req: Request, res: Response, next: NextFunction) => {
         try {
 
@@ -44,9 +53,19 @@ const llmInferenceController = {
                         },
                         create: data.phone
                     }
-                }},
-            })
+                },
+                llm_model: {
+                    connectOrCreate: {
+                        where: {
+                            name: data.llm_model.name
+                        },
+                        create: data.llm_model
+                    }
+                }
+            }})
+
             return res.status(200).json(createdInference)
+
         } catch (error) {
             next(error)
         }
@@ -54,15 +73,27 @@ const llmInferenceController = {
 
     getRanking: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            
-            const phones = await prisma.phone.findMany({where: { LLMInference: { some: {} }}})
+
+            const { models } = req.query
+
+            const modelsArray: string[] = models ? (models as string).split(',') : [];
+
+            const phones = await prisma.phone.findMany({
+                where: { 
+                    LLMInference: { some: {} }
+                }})
             const results = []
 
             for(let phone of phones){
                 results.push({ 
                     phone: phone, 
                     result: await inferenceServices.getLLMRankingData({
-                        phone_id: phone.id
+                        phone_id: phone.id,
+                        llm_model: {
+                            name: {
+                                in: modelsArray
+                            }
+                        }
                     }) 
                 })
             }
