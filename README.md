@@ -1,44 +1,43 @@
-
 # Benchmarking Ranking
 
-Este projeto é uma API de ranking de benchmarking desenvolvida com Node.js, Express, TypeScript, e Prisma.
+This project is a benchmarking ranking API developed with Node.js, Express, TypeScript, and Prisma.
 
-## Pré-requisitos
+## Prerequisites
 
-Certifique-se de ter o [Node.js](https://nodejs.org/) instalado em sua máquina.
+Make sure you have [Node.js](https://nodejs.org/) installed on your machine.
 
-## Instalação
+## Installation
 
-1. Clone este repositório;
+1. Clone this repository;
 
-2. Navegue até o diretório do projeto;
+2. Navigate to the project directory;
 
-3. Instale as dependências:
+3. Install the dependencies:
 
    ```bash
    yarn
    ```
 
-## Configuração do Prisma
+## Prisma Configuration
 
-1. Certifique-se de ter uma base de dados configurada e atualize o arquivo `.env` com a URL do seu banco de dados. Exemplo:
+1. Make sure you have a database configured and update the `.env` file with your database URL. Example:
 
    ```
    DATABASE_URL="mysql://user:password@localhost:3306/database-name"
    ```
 
-2. Execute a migração do Prisma para configurar o banco de dados:
+2. Run the Prisma migration to configure the database:
 
    ```bash
    npx prisma db push
    ```
 
-## Executando a aplicação
+## Running the application
 
-1. Para iniciar o servidor, execute:
+1. To start the server, run:
 
    ```bash
    npm run start
    ```
 
-2. O servidor estará rodando em [http://localhost:3000](http://localhost:3000).
+2. The server will be running at [http://localhost:3000](http://localhost:3000).
