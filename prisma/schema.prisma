@@ -52,10 +52,10 @@ model Inference {
 
 model Measurement {
   id                 Int     @id @default(autoincrement())
-  average            Float
-  median             Float
-  peak               Float
-  std                Float
+  average            Float?
+  median             Float?
+  peak               Float?
+  std                Float?
   ramLLMInferences LLMInference[] @relation("RamMeasurement")
   gpuLLMInferences LLMInference[] @relation("GpuMeasurement")
   cpuLLMInferences LLMInference[] @relation("CpuMeasurement")

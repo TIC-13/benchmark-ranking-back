@@ -76,8 +76,8 @@ const inferenceServices = {
             }
         });
 
-        const prefill = inferences.map(x => x.prefill.average)
-        const decode = inferences.map(x => x.decode.average)
+        const prefill = inferences.map(x => x.prefill.average).filter(x => x !== null)
+        const decode = inferences.map(x => x.decode.average).filter(x => x !== null)
         const power = inferences.map(x => x.powerAverage).filter(x => x !== null)
         const energy = inferences.map(x => x.energyAverage).filter(x => x !== null)
 
@@ -87,8 +87,8 @@ const inferenceServices = {
         if (inferences.length === 0) return null
 
         return {
-            prefill: avg(prefill),
-            decode: avg(decode),
+            prefill: avg(prefill as number[]),
+            decode: avg(decode as number[]),
             power: avg(power as number[]),
             energy: avg(energy as number[]),
             samples: inferences.length

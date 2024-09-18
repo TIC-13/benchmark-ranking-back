@@ -2,10 +2,10 @@ import { z } from "zod"
 import { phoneSchema } from "./phone"
 
 const measurementSchema = z.object({
-    average: z.number(),
-    median: z.number(),
-    peak: z.number(),
-    std: z.number()
+    average: z.number().optional(),
+    median: z.number().optional(),
+    peak: z.number().optional(),
+    std: z.number().optional()
 })
 
 const modelSchema = z.object({
