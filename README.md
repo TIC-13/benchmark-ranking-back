@@ -18,6 +18,9 @@ Make sure you have [Node.js](https://nodejs.org/) installed on your machine.
    yarn
    ```
 
+## Environment
+In the `.env` file, assign a base64-encoded 32-byte (AES-256) value to `API_KEY`. Ensure that this key is the same as the one used in the client applications.
+
 ## Prisma Configuration
 
 1. Make sure you have a database configured and update the `.env` file with your database URL. Example:
