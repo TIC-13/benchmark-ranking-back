@@ -42,7 +42,7 @@ const llmInferenceController = {
             const createdInference = await prisma.lLMInference.create({data: {
                 ...data,
                 ram: { create: data.ram },
-                gpu: { create: data.cpu },
+                gpu: { create: data.gpu },
                 cpu: { create: data.cpu },
                 prefill: { create: data.prefill },
                 decode: { create: data.decode },
