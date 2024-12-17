@@ -83,8 +83,8 @@ model LLMInference {
   ram                Measurement @relation("RamMeasurement", fields: [ram_id], references: [id], map: "Ram_fkey")
   ram_id             Int
 
-  gpu                Measurement @relation("GpuMeasurement", fields: [gpu_id], references: [id], map: "Gpu_fkey")
-  gpu_id             Int
+  gpu                Measurement? @relation("GpuMeasurement", fields: [gpu_id], references: [id], map: "Gpu_fkey")
+  gpu_id             Int?
 
   cpu                Measurement? @relation("CpuMeasurement", fields: [cpu_id], references: [id], map: "Cpu_fkey")
   cpu_id             Int?
