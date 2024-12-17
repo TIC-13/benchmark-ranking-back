@@ -91,7 +91,7 @@ const inferenceServices = {
         const power = process(inferences.map(x => x.powerAverage))
         const energy = process(inferences.map(x => x.energyAverage))
         const gpu = process(inferences.map(x => x.gpu.average))
-        const cpu = process(inferences.map(x => x.cpu.average))
+        const cpu = process(inferences.map(x => x.cpu?.average ?? null))
         const ram = process(inferences.map(x => x.ram.average))
 
         if (inferences.length === 0) return null
