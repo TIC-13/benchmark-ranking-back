@@ -1,6 +1,23 @@
-import { number } from "zod";
 import { prisma } from "../utils/prismaClient"
 import { Prisma } from "@prisma/client"
+
+class Sampler {
+    private total: number = 0
+    private numSamples: number = 0
+
+    add = (sample: number) => {
+        this.total += sample
+        this.numSamples ++
+    }
+
+    average = () => {
+        if(this.numSamples === 0) return 0
+        return this.total/this.numSamples
+    }
+
+    averageInt = () => parseInt(this.average().toString())
+}
+
 
 const inferenceServices = {
 
@@ -35,33 +52,30 @@ const inferenceServices = {
         const inferences = await prisma.inference.findMany({ where: selectionArgs });
         if (inferences.length === 0) return null
 
-        let totalSpeed = 0
-        let speedSamples = 0
+        const speed = new Sampler()
+        const cpu = new Sampler()
+        const gpu = new Sampler()
+        const ram = new Sampler()
 
-        let totalPower = 0
-        let totalEnergy = 0
-        let powerEnergySamples = 0
+        for (let {inf_speed, cpu_usage, gpu_usage, ram_usage} of inferences) {
 
+            const pairsToSample = [
+                {sample: inf_speed, sampler: speed},
+                {sample: cpu_usage, sampler: cpu},
+                {sample: ram_usage, sampler: ram},
+                {sample: gpu_usage, sampler: gpu}
+            ]
 
-        for (let inf of inferences) {
-
-            if (inf.inf_speed !== null) {
-                totalSpeed += inf.inf_speed * inf.num_images
-                speedSamples += inf.num_images
-            }
-
-            if (inf.power !== null && inf.energy !== null) {
-                totalPower += inf.power * inf.num_images
-                totalEnergy += inf.energy * inf.num_images
-                powerEnergySamples += inf.num_images
-            }
-
+            for(let {sample, sampler} of pairsToSample) 
+                if(sample !== null)
+                    sampler.add(sample)
+                
         }
 
         return {
-            speed: parseInt((totalSpeed / speedSamples).toString()),
-            power: totalPower / powerEnergySamples,
-            energy: totalEnergy / powerEnergySamples,
+            speed: speed.averageInt(),
+            cpu: cpu.averageInt(),
+            gpu: gpu.averageInt(),
             samples: inferences
                 .map(x => x.num_images)
                 .reduce((acc, curr) => acc + curr)
