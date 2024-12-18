@@ -69,13 +69,13 @@ const inferenceServices = {
             for(let {sample, sampler} of pairsToSample) 
                 if(sample !== null)
                     sampler.add(sample)
-                
         }
 
         return {
             speed: speed.averageInt(),
             cpu: cpu.averageInt(),
             gpu: gpu.averageInt(),
+            ram: ram.averageInt(),
             samples: inferences
                 .map(x => x.num_images)
                 .reduce((acc, curr) => acc + curr)
