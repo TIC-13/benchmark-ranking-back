@@ -26,22 +26,25 @@ const utilsController = {
     totalVisionInferencesByModel: async (req: Request, res: Response, next: NextFunction) => {
         try {
             const results = await prisma.inference.groupBy({
-                by: ['ml_model'],
+                by: ['ml_model', 'quantization'],
                 _count: {
-                    ml_model: true,
+                    _all: true,
                 },
             });
-
+    
             const objResult = results.reduce((acc, result) => {
-                acc[result.ml_model] = result._count.ml_model;
+     
+                const quantization = result.quantization || 'UNKNOWN';
+                const key = `${result.ml_model} - ${quantization}`;
+                acc[key] = result._count._all;
                 return acc;
             }, {} as { [key: string]: number });
-
-            return res.status(200).json(objResult)
-
+    
+            return res.status(200).json(objResult);
+    
         } catch (error) {
-            next(error)
-        }
+            next(error);
+        } 
     }
 }
 
