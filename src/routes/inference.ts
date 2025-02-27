@@ -8,7 +8,5 @@ router.get("/:id", inferenceController.getInference)
 router.post("/", inferenceController.createInference)
 router.get("/get/models", inferenceController.getAllModels)
 router.get("/get/quantizations", inferenceController.getAllQuantizations)
-router.get("/get/count", inferenceController.totalInferences)
-router.get("/get/imageCount", inferenceController.totalImages)
 
 export default router

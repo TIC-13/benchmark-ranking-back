@@ -70,26 +70,6 @@ const inferenceController = {
         } catch (error) {
             next(error)
         }
-    },
-
-    totalInferences: async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const count = await prisma.inference.count()
-            return res.status(200).json(count)
-        } catch (error) {
-            next(error)
-        }
-    },
-
-    totalImages: async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const count = (await prisma.inference.findMany())
-                .map(inf => inf.num_images)
-                .reduce((x, y) => x + y)
-            return res.status(200).json(count)
-        } catch (error) {
-            next(error)
-        }
     }
 }
 

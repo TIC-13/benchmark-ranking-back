@@ -2,6 +2,7 @@ import express from 'express'
 import phoneRouter from './routes/phone';
 import inferenceRouter from './routes/inference';
 import llmInferenceRouter from "./routes/llmInferences"
+import utilsRouter from "./routes/utils"
 import errorHandler from './middleware/error';
 import cors from 'cors';
 import decryptRequestBody from './middleware/decrypt';
@@ -17,6 +18,7 @@ app.use(decryptRequestBody)
 app.use('/phone', phoneRouter);
 app.use('/inference', inferenceRouter);
 app.use("/llmInference", llmInferenceRouter)
+app.use("/utils", utilsRouter)
 
 app.use(errorHandler)
 
