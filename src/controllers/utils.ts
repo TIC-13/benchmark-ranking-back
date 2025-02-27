@@ -26,16 +26,24 @@ const utilsController = {
     totalVisionInferencesByModel: async (req: Request, res: Response, next: NextFunction) => {
         try {
             const results = await prisma.inference.groupBy({
-                by: ['ml_model', 'quantization'],
+                by: ['ml_model', 'quantization', 'uses_gpu', 'uses_nnapi'],
                 _count: {
                     _all: true,
                 },
             });
     
             const objResult = results.reduce((acc, result) => {
-     
                 const quantization = result.quantization || 'UNKNOWN';
-                const key = `${result.ml_model} - ${quantization}`;
+                
+                // Determine the compute type based on flags
+                let computeType = 'CPU'; // Default to CPU
+                if (result.uses_gpu) {
+                    computeType = 'GPU';
+                } else if (result.uses_nnapi) {
+                    computeType = 'NNAPI';
+                }
+    
+                const key = `${result.ml_model} - ${quantization} - ${computeType}`;
                 acc[key] = result._count._all;
                 return acc;
             }, {} as { [key: string]: number });
@@ -44,7 +52,7 @@ const utilsController = {
     
         } catch (error) {
             next(error);
-        } 
+        }
     }
 }
 
