@@ -102,6 +102,15 @@ const llmInferenceController = {
         } catch (error) {
             next(error)
         }
+    },
+
+    totalInferences: async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const count = await prisma.lLMInference.count()
+            return res.status(200).json(count)
+        } catch (error) {
+            next(error)
+        }
     }
 }
 
