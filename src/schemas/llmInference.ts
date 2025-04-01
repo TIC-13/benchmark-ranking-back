@@ -15,8 +15,8 @@ const modelSchema = z.object({
 const llmInferenceSchema = z.object({
     llm_model: modelSchema,
     phone: phoneSchema,
-    cpu: measurementSchema,
-    gpu: measurementSchema,
+    cpu: measurementSchema.optional(),
+    gpu: measurementSchema.optional(),
     ram: measurementSchema,
     prefill: measurementSchema,
     decode: measurementSchema,

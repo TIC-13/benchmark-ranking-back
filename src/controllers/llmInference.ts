@@ -64,6 +64,8 @@ const llmInferenceController = {
                 }
             }})
 
+            console.log("LLM inference created", createdInference.id)
+
             return res.status(200).json(createdInference)
 
         } catch (error) {
