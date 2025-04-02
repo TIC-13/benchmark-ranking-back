@@ -5,6 +5,7 @@ const measurementSchema = z.object({
     average: z.number().optional(),
     median: z.number().optional(),
     peak: z.number().optional(),
+    sum: z.number().optional(),
     std: z.number().optional()
 })
 
