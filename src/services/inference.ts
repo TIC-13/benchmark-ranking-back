@@ -100,7 +100,7 @@ const inferenceServices = {
 
         const process = (arr: (number | null)[]) => avg(removeNull(arr) as number[])  
 
-        const prefill = process(inferences.map(x => x.prefill.average))
+        const prefill = process(inferences.map(x => x.prefill.sum))
         const decode = process(inferences.map(x => x.decode.average))
         const power = process(inferences.map(x => x.powerAverage))
         const energy = process(inferences.map(x => x.energyAverage))
