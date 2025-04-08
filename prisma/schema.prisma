@@ -99,3 +99,13 @@ model LLMInference {
   powerAverage       Float?
   energyAverage      Float?
 }
+
+model Report {
+  id                 Int     @id @default(autoincrement())
+  type               String
+  user_description   String   @db.Text
+  conversation       String   @db.Text
+  model              String
+  created_at         DateTime @default(now())
+
+}
