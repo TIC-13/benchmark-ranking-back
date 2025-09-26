@@ -1,0 +1,30 @@
+services:
+  app:
+    build: .
+    container_name: ranking-backend
+    restart: unless-stopped
+    ports:
+      - "${DOCKER_BACK_PORT_EXPOSED:-3030}:${PORT:-3030}"
+    profiles:
+      - app
+
+  db:
+    image: mysql:8.0
+    container_name: ranking-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DOCKER_MYSQL_ROOT_PASSWORD:-root}"
+      MYSQL_DATABASE: ranking
+      MYSQL_USER: ${DOCKER_MYSQL_USER:-user}
+      MYSQL_PASSWORD: ${DOCKER_MYSQL_PASSWORD:-password}
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - "${DOCKER_DB_HOST_PORT:-3306}:3306"
+    volumes:
+      - ${DOCKER_DB_VOLUME_PATH:-ranking_db_data}:/var/lib/mysql
+      - ${DOCKER_DB_BACKUP_FILE_TO_CONSUME:-/dev/null}:/docker-entrypoint-initdb.d/backup.sql:ro
+    profiles:
+      - db
+
+volumes:
+  ranking_db_data:
