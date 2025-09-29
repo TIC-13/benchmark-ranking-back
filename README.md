@@ -51,6 +51,9 @@ You can run this project in production using Docker.
    * `DOCKER_MYSQL_USER`: Database user (default: `user`)
    * `DOCKER_DB_VOLUME_PATH`: Path for the database volume (default: named volume `ranking_db_data`)
    * `DOCKER_DB_BACKUP_FILE_TO_CONSUME`: Path to a backup file to initialize the database with, if any. When provided, the database will start with the backup data.
+   * `ENABLE_BACKUP`: If the database container should do backup in the BACKUP_PATH
+   * `DOCKER_DB_BACKUP_PATH`: Path to store the backup if ENABLE_BACKUP is true (default: `./backup`)`
+   * `BACKUP_INTERVAL`: Interval to do the backup (default: 86400 seconds, or one day)
 
 2. **Start the API container:**
 

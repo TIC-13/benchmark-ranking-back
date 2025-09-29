@@ -17,12 +17,16 @@ services:
       MYSQL_DATABASE: ranking
       MYSQL_USER: ${DOCKER_MYSQL_USER:-user}
       MYSQL_PASSWORD: ${DOCKER_MYSQL_PASSWORD:-password}
-    command: --default-authentication-plugin=mysql_native_password
+      ENABLE_BACKUP: "${ENABLE_BACKUP:-false}"
+      BACKUP_INTERVAL: ${BACKUP_INTERVAL:-86400}
+    command: bash /backup.sh
     ports:
       - "${DOCKER_DB_HOST_PORT:-3306}:3306"
     volumes:
       - ${DOCKER_DB_VOLUME_PATH:-ranking_db_data}:/var/lib/mysql
       - ${DOCKER_DB_BACKUP_FILE_TO_CONSUME:-/dev/null}:/docker-entrypoint-initdb.d/backup.sql:ro
+      - ${DOCKER_DB_BACKUP_PATH:-./backups}:/backup
+      - ./backup.sh:/backup.sh:ro
     profiles:
       - db
 
